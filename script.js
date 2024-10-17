@@ -3,6 +3,8 @@ const Patient = require('./models/patient');
 const Physio = require('./models/physio');
 const Record = require('./models/record');
 
+mongoose.set('strictQuery', false);
+
 // Function to load initial data
 async function loadData() {
     try {

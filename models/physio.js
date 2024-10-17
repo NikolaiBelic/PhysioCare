@@ -13,7 +13,7 @@ let physioSchema = new moongose.Schema({
         minlength: 2,
         maxlength: 50
     },
-    speciality: {
+    specialty: {
         type: String,
         required: true,
         enum: ['Sports', 'Neurological', 'Pediatric', 'Geriatric', 'Oncological'],
@@ -26,5 +26,5 @@ let physioSchema = new moongose.Schema({
     }
 });
 
-let Physio = mongoose.model('physios', physioSchema);
+let Physio = moongose.model('physios', physioSchema);
 module.exports = Physio;

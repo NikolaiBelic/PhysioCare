@@ -29,5 +29,5 @@ let patientSchema = new moongose.Schema({
     }
 });
 
-let Patient = mongoose.model('patients', patientSchema);
+let Patient = moongose.model('patients', patientSchema);
 module.exports = Patient;
