@@ -1,177 +1,179 @@
 const mongoose = require('mongoose');
-const Paciente = require('./models/paciente');
-const Fisio = require('./models/fisio');
-const Expediente = require('./models/expediente');
+const Patient = require('./models/patient');
+const Physio = require('./models/physio');
+const Record = require('./models/record');
 
-// Conectar a la base de datos MongoDB
-mongoose.connect('mongodb://localhost:27017/gestion_clinica')
+// Function to load initial data
+async function loadData() {
+    try {
+      // Clean existing collections
+      await Patient.deleteMany({});
+      await Physio.deleteMany({});
+      await Record.deleteMany({});
+      
+     // Create some patients  
+      const patients = [
+          new Patient({
+              name: 'José',
+              surname: 'López',
+              birthDate: new Date('1985-06-15'),
+              address: 'Calle Mayor 123, Alicante',
+              insuranceNumber: '123456789'
+          }),
+          new Patient({
+              name: 'Ana',
+              surname: 'Pérez',
+              birthDate: new Date('1990-09-22'),
+              address: 'Avenida del Sol 45, Valencia',
+              insuranceNumber: '987654321'
+          }),
+          new Patient({
+              name: 'Luis',
+              surname: 'Martínez',
+              birthDate: new Date('1975-03-11'),
+              address: 'Calle de la Luna 89, Alicante',
+              insuranceNumber: '456789123'
+          }),
+          new Patient({
+              name: 'María',
+              surname: 'Sanz',
+              birthDate: new Date('1992-05-30'),
+              address: 'Plaza Mayor 22, Valencia',
+              insuranceNumber: '321654987'
+          })
+      ];
+  
+      // Save all patients using Promise.all
+      const savedPatients = await Promise.all(patients.map(patient => patient.save()));
+      console.log('Added patients:', savedPatients);
+      
+      // Create several physios, at least one for each specialty
+      const physios = [
+          new Physio({
+              name: 'Javier',
+              surname: 'Martínez',
+              specialty: 'Sports',
+              licenseNumber: 'A1234567'
+          }),
+          new Physio({
+              name: 'Ainhoa',
+              surname: 'Fernández',
+              specialty: 'Neurological',
+              licenseNumber: 'B7654321'
+          }),
+          new Physio({
+              name: 'Mario',
+              surname: 'Sánchez',
+              specialty: 'Pediatric',
+              licenseNumber: 'C9876543'
+          }),
+          new Physio({
+              name: 'Andrea',
+              surname: 'Ortega',
+              specialty: 'Pediatric',
+              licenseNumber: 'D8796342'
+          }),
+          new Physio({
+              name: 'Ana',
+              surname: 'Rodríguez',
+              specialty: 'Geriatric',
+              licenseNumber: 'E6543210'
+          }),
+          new Physio({
+              name: 'Marcos',
+              surname: 'Gómez',
+              specialty: 'Oncological',
+              licenseNumber: 'F4321098'
+          })
+      ];
+  
+      // Save all physios using Promise.all
+      const savedPhysios = await Promise.all(physios.map(physio => physio.save()));
+      console.log('Added physios:', savedPhysios);
+  
+      // Create records with appointments
+      const records = [
+          new Record({
+              patient: savedPatients[0]._id,
+              medicalRecord: 'Paciente con antecedentes de lesiones en rodilla y cadera.',
+              appointments: [
+                  {
+                      date: new Date('2024-02-10'),
+                      physio: savedPhysios[0]._id, // Sports specialty physio
+                      diagnosis: 'Distensión de ligamentos de la rodilla',
+                      treatment: 'Rehabilitación con ejercicios de fortalecimiento',
+                      observations: 'Se recomienda evitar actividad intensa por 6 semanas'
+                  },
+                  {
+                      date: new Date('2024-03-01'),
+                      physio: savedPhysios[0]._id,
+                      diagnosis: 'Mejoría notable, sin dolor agudo',
+                      treatment: 'Continuar con ejercicios, añadir movilidad funcional',
+                      observations: 'Próxima revisión en un mes'
+                  }
+              ]
+          }),
+          new Record({
+              patient: savedPatients[1]._id,
+              medicalRecord: 'Paciente con problemas neuromusculares.',
+              appointments: [
+                  {
+                      date: new Date('2024-02-15'),
+                      physio: savedPhysios[1]._id, // Neurological specialty physio
+                      diagnosis: 'Debilidad muscular en miembros inferiores',
+                      treatment: 'Terapia neuromuscular y estiramientos',
+                      observations: 'Revisar la evolución en 3 semanas'
+                  }
+              ]
+          }),
+          new Record({
+              patient: savedPatients[2]._id,
+              medicalRecord: 'Lesión de hombro recurrente, movilidad limitada.',
+              appointments: [
+                  {
+                      date: new Date('2024-01-25'),
+                      physio: savedPhysios[2]._id, // Pediatric specialty physio
+                      diagnosis: 'Tendinitis en el manguito rotador',
+                      treatment: 'Ejercicios de movilidad y fortalecimiento',
+                      observations: 'Revisar en 4 semanas'
+                  }
+              ]
+          }),
+          new Record({
+              patient: savedPatients[3]._id,
+              medicalRecord: 'Paciente con problemas oncológicos.',
+              appointments: [
+                  {
+                      date: new Date('2024-01-15'),
+                      physio: savedPhysios[4]._id, // Oncology specialty physio
+                      diagnosis: 'Fatiga post-tratamiento oncológico',
+                      treatment: 'Ejercicios suaves y terapia de relajación',
+                      observations: 'Revisión en 2 semanas'
+                  }
+              ]
+          })
+      ];
+  
+      // Save all files using Promise.all
+      const savedRecords = await Promise.all(records.map(record => record.save()));
+      console.log('Added records:', savedRecords);
+  
+      mongoose.disconnect();
+      console.log('Data successfully loaded and disconnected from MongoDB');
+      } catch (error) {
+          console.error('Error loading data:', error);
+          mongoose.disconnect();
+      }
+}
+
+// Connect to MongoDB database
+mongoose.connect('mongodb://localhost:27017/physiocare')
   .then(() => {
-    console.log('Conexión exitosa a MongoDB');
-    cargarDatos();
+    console.log('Successful connection to MongoDB');
+    loadData();
   })
   .catch((error) => {
-    console.error('Error al conectar a MongoDB:', error);
+    console.error('Error connecting to MongoDB:', error);
   });
 
-// Función para cargar datos iniciales
-async function cargarDatos() {
-  try {
-    // Limpiar las colecciones existentes
-    await Paciente.deleteMany({});
-    await Fisio.deleteMany({});
-    await Expediente.deleteMany({});
-    
-    // Crear algunos pacientes   
-    const pacientes = [
-        new Paciente({
-            nombre: 'José',
-            apellidos: 'López',
-            fechaNacimiento: new Date('1985-06-15'),
-            direccion: 'Calle Mayor 123, Alicante',
-            numeroSeguridadSocial: '123456789'
-        }),
-        new Paciente({
-            nombre: 'Ana',
-            apellidos: 'Pérez',
-            fechaNacimiento: new Date('1990-09-22'),
-            direccion: 'Avenida del Sol 45, Valencia',
-            numeroSeguridadSocial: '987654321'
-        }),
-        new Paciente({
-            nombre: 'Luis',
-            apellidos: 'Martínez',
-            fechaNacimiento: new Date('1975-03-11'),
-            direccion: 'Calle de la Luna 89, Alicante',
-            numeroSeguridadSocial: '456789123'
-        }),
-        new Paciente({
-            nombre: 'María',
-            apellidos: 'Sanz',
-            fechaNacimiento: new Date('1992-05-30'),
-            direccion: 'Plaza Mayor 22, Valencia',
-            numeroSeguridadSocial: '321654987'
-        })
-    ];
 
-    // Guardar todos los pacientes usando Promise.all
-    const pacientesGuardados = await Promise.all(pacientes.map(paciente => paciente.save()));
-    console.log('Pacientes añadidos:', pacientesGuardados);
-    
-    // Crear varios fisios, al menos uno para cada especialidad
-    const fisios = [
-        new Fisio({
-            nombre: 'Javier',
-            apellidos: 'Martínez',
-            especialidad: 'Deportiva',
-            numeroColegiado: 'A1234567'
-        }),
-        new Fisio({
-            nombre: 'Ainhoa',
-            apellidos: 'Fernández',
-            especialidad: 'Neurológica',
-            numeroColegiado: 'B7654321'
-        }),
-        new Fisio({
-            nombre: 'Mario',
-            apellidos: 'Sánchez',
-            especialidad: 'Pediátrica',
-            numeroColegiado: 'C9876543'
-        }),
-        new Fisio({
-            nombre: 'Andrea',
-            apellidos: 'Ortega',
-            especialidad: 'Pediátrica',
-            numeroColegiado: 'C9876543'
-        }),
-        new Fisio({
-            nombre: 'Ana',
-            apellidos: 'Rodríguez',
-            especialidad: 'Geriátrica',
-            numeroColegiado: 'D6543210'
-        }),
-        new Fisio({
-            nombre: 'Marcos',
-            apellidos: 'Gómez',
-            especialidad: 'Oncológica',
-            numeroColegiado: 'E4321098'
-        })
-    ];
-
-    // Guardar todos los fisios usando Promise.all
-    const fisiosGuardados = await Promise.all(fisios.map(fisio => fisio.save()));
-    console.log('Fisios añadidos:', fisiosGuardados);
-
-    // Crear expedientes médicos con consultas
-    const expedientes = [
-        new Expediente({
-            paciente: pacientesGuardados[0]._id,
-            historialClinico: 'Paciente con antecedentes de lesiones en rodilla y cadera.',
-            consultas: [
-                {
-                    fecha: new Date('2024-02-10'),
-                    fisio: fisiosGuardados[0]._id, // Fisio de especialidad Deportiva
-                    diagnostico: 'Distensión de ligamentos de la rodilla',
-                    tratamiento: 'Rehabilitación con ejercicios de fortalecimiento',
-                    observaciones: 'Se recomienda evitar actividad intensa por 6 semanas'
-                },
-                {
-                    fecha: new Date('2024-03-01'),
-                    fisio: fisiosGuardados[0]._id,
-                    diagnostico: 'Mejoría notable, sin dolor agudo',
-                    tratamiento: 'Continuar con ejercicios, añadir movilidad funcional',
-                    observaciones: 'Próxima revisión en un mes'
-                }
-            ]
-        }),
-        new Expediente({
-            paciente: pacientesGuardados[1]._id,
-            historialClinico: 'Paciente con problemas neuromusculares.',
-            consultas: [
-                {
-                    fecha: new Date('2024-02-15'),
-                    fisio: fisiosGuardados[1]._id, // Fisio de especialidad Neurológica
-                    diagnostico: 'Debilidad muscular en miembros inferiores',
-                    tratamiento: 'Terapia neuromuscular y estiramientos',
-                    observaciones: 'Revisar la evolución en 3 semanas'
-                }
-            ]
-        }),
-        new Expediente({
-            paciente: pacientesGuardados[2]._id,
-            historialClinico: 'Lesión de hombro recurrente, movilidad limitada.',
-            consultas: [
-                {
-                    fecha: new Date('2024-01-25'),
-                    fisio: fisiosGuardados[2]._id, // Fisio de especialidad Pediátrica
-                    diagnostico: 'Tendinitis en el manguito rotador',
-                    tratamiento: 'Ejercicios de movilidad y fortalecimiento',
-                    observaciones: 'Revisar en 4 semanas'
-                }
-            ]
-        }),
-        new Expediente({
-            paciente: pacientesGuardados[3]._id,
-            historialClinico: 'Paciente con problemas oncológicos.',
-            consultas: [
-                {
-                    fecha: new Date('2024-01-15'),
-                    fisio: fisiosGuardados[4]._id, // Fisio de especialidad Oncológica
-                    diagnostico: 'Fatiga post-tratamiento oncológico',
-                    tratamiento: 'Ejercicios suaves y terapia de relajación',
-                    observaciones: 'Revisión en 2 semanas'
-                }
-            ]
-        })
-    ];
-
-    // Guardar todos los expedientes usando Promise.all
-    const expedientesGuardados = await Promise.all(expedientes.map(expediente => expediente.save()));
-    console.log('Expedientes añadidos:', expedientesGuardados);
-
-    mongoose.disconnect();
-    console.log('Datos cargados exitosamente y desconectado de MongoDB');
-    } catch (error) {
-        console.error('Error al cargar datos:', error);
-        mongoose.disconnect();
-    }
-}
