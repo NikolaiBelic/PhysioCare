@@ -177,5 +177,3 @@ mongoose.connect('mongodb://localhost:27017/physiocare')
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error);
   });
-
-

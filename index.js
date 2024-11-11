@@ -1,8 +1,17 @@
 const mongoose = require('mongoose');
 const express = require('express');
 
-/* const Patient = require(__dirname + "/models/patient");
-const Physio = require(__dirname + "/models/physio");
-const Record = require(__dirname + "/models/record"); */
+mongoose.set('strictQuery', true);
 
-mongoose.connect('mongodb://127.0.0.1:27017/physioare');
+const patients = require(__dirname + "/routes/patients");
+const physios = require(__dirname + "/routes/physios");
+const records = require(__dirname + "/routes/records");
+
+mongoose.connect('mongodb://127.0.0.1:27017/physiocare');
+
+let app = express();
+app.use(express.json());
+app.use('/patients', patients);
+app.use('/physios', physios);
+app.use('/records', records);
+app.listen(8080);

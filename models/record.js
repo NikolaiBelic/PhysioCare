@@ -1,12 +1,12 @@
-const moongose = require('mongoose');
+const mongoose = require('mongoose');
 
-let consultaSchema = new moongose.Schema({
+let appointmentSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true
     },
     physio: {
-        type: moongose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'physios',
         required: true
     },
@@ -26,9 +26,9 @@ let consultaSchema = new moongose.Schema({
     }
 });
 
-let recordSchema = new moongose.Schema({
+let recordSchema = new mongoose.Schema({
     patient: {
-        type: moongose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'patients',
         required: true
     },
@@ -36,8 +36,9 @@ let recordSchema = new moongose.Schema({
         type: String,
         maxlength: 1000
     },
-    appointments: [consultaSchema]
+    appointments: [appointmentSchema]
 });
 
-let Record = moongose.model('records', recordSchema);
+let Record = mongoose.model('records', recordSchema);
+
 module.exports = Record;

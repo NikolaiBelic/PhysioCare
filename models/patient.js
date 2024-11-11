@@ -1,6 +1,6 @@
-const moongose = require('mongoose');
+const mongoose = require('mongoose');
 
-let patientSchema = new moongose.Schema({
+let patientSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -29,5 +29,5 @@ let patientSchema = new moongose.Schema({
     }
 });
 
-let Patient = moongose.model('patients', patientSchema);
+let Patient = mongoose.model('patients', patientSchema);
 module.exports = Patient;
