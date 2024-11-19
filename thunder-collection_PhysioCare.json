@@ -1,0 +1,278 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "PhysioCare",
+    "collectionId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+    "dateExported": "2024-11-12T20:38:06.040Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "40f56fd6-1815-47a5-af16-833a0c094f36",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /patients",
+            "url": "http://localhost:8080/patients",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-11-07T08:41:52.195Z",
+            "modified": "2024-11-07T08:50:06.337Z",
+            "headers": []
+        },
+        {
+            "_id": "7f514793-16f1-4ce0-8ffe-4113514bc429",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /patients/:id",
+            "url": "http://localhost:8080/patients/672cbe7d5da1e6f380fcec99",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-11-07T08:59:31.463Z",
+            "modified": "2024-11-11T09:38:21.284Z",
+            "headers": []
+        },
+        {
+            "_id": "ab072585-60b8-4998-941f-20df8a2593c7",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /patients/find",
+            "url": "http://localhost:8080/patients/find?surname=sanz",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-11-07T09:02:16.595Z",
+            "modified": "2024-11-11T09:24:23.632Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "surname",
+                    "value": "sanz",
+                    "isPath": false
+                }
+            ]
+        },
+        {
+            "_id": "29fdec8f-dd71-4679-bc7b-024626de7a37",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "POST /patients",
+            "url": "http://localhost:8080/patients",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-11-07T13:14:40.765Z",
+            "modified": "2024-11-11T09:06:50.545Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Prueba\",\n  \"surname\": \"Martínez\",\n  \"birthDate\": \"1995-02-09\",\n  \"address\": \"Calle Alcalde Ramón Orts Galán, número 7, BW 43\",\n  \"insuranceNumber\": \"A2365987C\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "c536d198-9b1c-46da-95dc-6f8af798c66a",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "PUT /patients/:id",
+            "url": "http://localhost:8080/patients/672cbe7d5da1e6f380fcec99",
+            "method": "PUT",
+            "sortNum": 70000,
+            "created": "2024-11-07T13:23:59.966Z",
+            "modified": "2024-11-07T13:25:26.024Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Álvaro\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "acf796c8-650c-4f08-9a5e-1e4bf3e6c936",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "DELETE /patients/:id",
+            "url": "http://localhost:8080/patients/6731b63144491f0ab0393df4",
+            "method": "DELETE",
+            "sortNum": 80000,
+            "created": "2024-11-07T13:31:38.084Z",
+            "modified": "2024-11-11T07:46:09.413Z",
+            "headers": []
+        },
+        {
+            "_id": "af1e4cf7-2798-451a-a5ec-8d7f64122265",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /physios",
+            "url": "http://localhost:8080/physios",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2024-11-11T07:49:02.891Z",
+            "modified": "2024-11-11T07:49:22.475Z",
+            "headers": []
+        },
+        {
+            "_id": "84fe1d3e-1bb7-4b3d-bfb6-b960a0391899",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /physios/find",
+            "url": "http://localhost:8080/physios/find?specialty=",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2024-11-11T07:50:58.766Z",
+            "modified": "2024-11-11T09:26:39.117Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "specialty",
+                    "value": "",
+                    "isPath": false
+                }
+            ]
+        },
+        {
+            "_id": "50fd91cf-7d08-47fa-9d97-1cd896b67c95",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /physios/:id",
+            "url": "http://localhost:8080/physios/67111a29c6685b2f1c0c6ab8",
+            "method": "GET",
+            "sortNum": 110000,
+            "created": "2024-11-11T08:02:28.151Z",
+            "modified": "2024-11-11T08:05:13.735Z",
+            "headers": []
+        },
+        {
+            "_id": "bd48f8a6-8196-44a5-ae7c-8542469a44b3",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "POST /physios",
+            "url": "http://localhost:8080/physios",
+            "method": "POST",
+            "sortNum": 120000,
+            "created": "2024-11-11T08:05:46.976Z",
+            "modified": "2024-11-11T08:13:49.695Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": " {\n    \"name\": \"Alfredo\",\n    \"surname\": \"Test\",\n    \"specialty\": \"Sports\",\n    \"licenseNumber\": \"C9654381\"\n  }",
+                "form": []
+            }
+        },
+        {
+            "_id": "2314748c-db8f-4903-945f-d8b69741f66d",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "PUT /physios/:id",
+            "url": "http://localhost:8080/physios/6731bcbdbe99f53eb4817e4b",
+            "method": "PUT",
+            "sortNum": 140000,
+            "created": "2024-11-11T08:14:53.623Z",
+            "modified": "2024-11-11T08:17:15.252Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"specialty\": \"Neurological\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "b5ac2e52-15f4-4988-a526-7cf98f0bd3a0",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "DELETE /physios/:id",
+            "url": "http://localhost:8080/physios/6731bc9ebe99f53eb4817e46",
+            "method": "DELETE",
+            "sortNum": 150000,
+            "created": "2024-11-11T08:18:39.535Z",
+            "modified": "2024-11-11T08:19:52.084Z",
+            "headers": []
+        },
+        {
+            "_id": "5a67e929-6c43-4f93-8728-fca06d59a68e",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /records",
+            "url": "http://localhost:8080/records",
+            "method": "GET",
+            "sortNum": 160000,
+            "created": "2024-11-11T08:23:30.881Z",
+            "modified": "2024-11-11T08:23:44.237Z",
+            "headers": []
+        },
+        {
+            "_id": "38596ff3-6e73-4207-8755-2f18d8fc1392",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /records/find",
+            "url": "http://localhost:8080/records/find?surname=martínez",
+            "method": "GET",
+            "sortNum": 170000,
+            "created": "2024-11-11T08:42:58.285Z",
+            "modified": "2024-11-11T09:29:31.179Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "surname",
+                    "value": "martínez",
+                    "isPath": false
+                }
+            ]
+        },
+        {
+            "_id": "eeaf9939-6659-4bdb-aa89-5fa47c9d060e",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "GET /records/:id",
+            "url": "http://localhost:8080/records/6731d05222e74fb993e833a6",
+            "method": "GET",
+            "sortNum": 180000,
+            "created": "2024-11-11T09:31:03.970Z",
+            "modified": "2024-11-11T11:25:11.229Z",
+            "headers": []
+        },
+        {
+            "_id": "d826f3db-abfe-4b51-a793-78019fff59ad",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "POST /records",
+            "url": "http://localhost:8080/records",
+            "method": "POST",
+            "sortNum": 190000,
+            "created": "2024-11-11T09:36:30.446Z",
+            "modified": "2024-11-11T09:37:23.046Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"patient\": \"672cbe7d5da1e6f380fcec99\",\n  \"medicalRecord\": \"Problemas mentales transitorios\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "184f5c89-dfb5-47e6-969d-a6fba3bf4c53",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "POST /records/:id/appointments",
+            "url": "http://localhost:8080/records/6731fb6c44bc45b0e5b0ec42/appointments",
+            "method": "POST",
+            "sortNum": 200000,
+            "created": "2024-11-11T10:21:19.377Z",
+            "modified": "2024-11-11T12:42:02.916Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"date\": \"2025-01-23\",\n    \"physio\": \"67111a29c6685b2f1c0c6abd\",\n    \"diagnosis\": \"no ha mejorado nada\",\n    \"treatment\": \"alprazolam\",\n    \"observations\": \"\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "9e4db6c1-2d9e-4e30-8ee8-572e89c01f89",
+            "colId": "1b259983-a99d-4c3e-8117-2a2623fa84d7",
+            "containerId": "",
+            "name": "DELETE /records/:id",
+            "url": "http://localhost:8080/records/6731fb6c44bc45b0e5b0ec42",
+            "method": "DELETE",
+            "sortNum": 210000,
+            "created": "2024-11-11T12:39:20.205Z",
+            "modified": "2024-11-11T12:42:34.472Z",
+            "headers": []
+        }
+    ],
+    "ref": "DDe-zuxZumgJjeXtx8qq18uWqcyGVprAV01DEYtr2TvOfWgdi5d58brNGp5h2_BO7Rf4xFmpVURmzl_g9uTTPw"
+}

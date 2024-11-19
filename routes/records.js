@@ -1,46 +1,44 @@
 const express = require('express');
 
+const auth = require(__dirname + '/../auth/auth.js');
 let Record = require(__dirname + '/../models/record.js');
 let Patient = require(__dirname + '/../models/patient.js');
 let router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', auth.protegerRuta("admin", "physio"), (req, res) => {
     Record.find(req.params.id).then(resultado => {
         if (resultado)
             res.status(200)
-                .send({ ok: true, resultado: resultado });
+                .send({ result: resultado });
         else
             res.status(404)
                 .send({
-                    ok: false,
                     error: "No hay expedientes en el sistema"
                 });
     }).catch(error => {
         res.status(500)
             .send({
-                ok: false,
                 error: "Error interno del servidor"
             });
     });
 });
 
-router.get('/find', (req, res) => {
+// ARREGLAR PARA BUSCAR TODOS LOS PACIENTES CON EL MISMO APELLIDO
+router.get('/find', auth.protegerRuta("admin", "physio"), (req, res) => {
     Patient.find({ surname: { $regex: new RegExp(`^${req.query.surname}$`), $options: 'i' } }).then(resultadoSurname => {
         if (resultadoSurname) {
-            Record.find({ patient: resultadoSurname }).then(resultado => {
+            Record.find({ patient: resultadoSurname[0]._id }, 'medicalRecord appointments -_id').then(resultado => {
                 if (resultado.length > 0)
                     res.status(200)
-                        .send({ ok: true, resultado: resultado });
+                        .send({ result: resultado });
                 else
                     res.status(404)
                         .send({
-                            ok: false,
                             error: "No se han encontrado expedientes con esos criterios"
                         });
             }).catch(error => {
                 res.status(500)
                     .send({
-                        ok: false,
                         error: "Error interno del servidor"
                     });
             });
@@ -48,46 +46,53 @@ router.get('/find', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
-    Record.findById(req.params.id).then(resultado => {
+// POR ID DE PACIENTE
+router.get('/:id', auth.protegerRuta("admin", "physio", "patient"), (req, res) => {
+    Record.findOne({patient: req.params.id}).then(resultado => {
         if (resultado)
-            res.status(200)
-                .send({ ok: true, resultado: resultado });
+            if (req.user.rol === "patient" && req.user.id !== req.params.id)
+                res.status(403)
+                    .send({
+                        error: "No tienes permiso para ver los datos de este paciente"
+                    });
+            else {
+                res.status(200)
+                    .send({ result: resultado });
+            }
         else
             res.status(404)
                 .send({
-                    ok: false,
                     error: "No se ha encontrado el expediente"
                 });
     }).catch(error => {
         res.status(500)
             .send({
-                ok: false,
                 error: "Error interno del servidor"
             });
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', auth.protegerRuta("admin", "physio"), (req, res) => {
     let newRecord = new Record({
         patient: req.body.patient,
         medicalRecord: req.body.medicalRecord
     });
     newRecord.save().then(resultado => {
         res.status(201)
-            .send({ ok: true, resultado: resultado });
+            .send({ result: resultado });
     }).catch(error => {
         res.status(400)
             .send({
-                ok: false,
                 error: "Error añadiendo expediente"
             });
     });
 });
 
-router.post('/:id/appointments', (req, res) => {
-    Record.findById(req.params.id).then(resultado => {
+router.post('/:id/appointments', auth.protegerRuta("admin", "physio"), (req, res) => {
+    Record.findOne({patient: req.params.id}).then(resultado => {
+        console.log(resultado);
         if (resultado) {
+            console.log(resultado.appointments);
             resultado.appointments.push({
                 date: req.body.date,
                 physio: req.body.physio,
@@ -96,42 +101,39 @@ router.post('/:id/appointments', (req, res) => {
                 observations: req.body.observations
             });
             resultado.save().then(resultado => {
-                res.status(201).send({ ok: true, resultado: resultado });
+                console.log(resultado);
+                res.status(201).send({ result: resultado });
             }).catch(error => {
                 res.status(500).send({
-                    ok: false,
                     error: "Error interno del servidor"
                 });
             });
         } else {
             res.status(404).send({
-                ok: false,
                 error: "Expediente no encontrado"
             });
         }
     }).catch(error => {
         res.status(500).send({
-            ok: false,
             error: "Error interno del servidor"
         });
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', auth.protegerRuta("admin", "physio"), (req, res) => {
     Record.findByIdAndDelete(req.params.id)
         .then(resultado => {
             if (resultado) {
                 res.status(200)
-                    .send({ ok: true, resultado: resultado });
+                    .send({ result: resultado });
             }
             else {
                 res.status(404)
-                    .send({ ok: false, error: "No existe el expediente a eliminar" })
+                    .send({ error: "No existe el expediente a eliminar" })
             }
         }).catch(error => {
             res.status(500)
                 .send({
-                    ok: false,
                     error: "Error interno del servidor"
                 });
         });
