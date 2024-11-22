@@ -6,10 +6,10 @@ let Patient = require(__dirname + '/../models/patient.js');
 let router = express.Router();
 
 router.get('/', auth.protegerRuta("admin", "physio"), (req, res) => {
-    Record.find(req.params.id).then(resultado => {
-        if (resultado)
+    Record.find(req.params.id).then(result => {
+        if (result)
             res.status(200)
-                .send({ result: resultado });
+                .send({ result: result });
         else
             res.status(404)
                 .send({
@@ -25,12 +25,12 @@ router.get('/', auth.protegerRuta("admin", "physio"), (req, res) => {
 
 // ARREGLAR PARA BUSCAR TODOS LOS PACIENTES CON EL MISMO APELLIDO
 router.get('/find', auth.protegerRuta("admin", "physio"), (req, res) => {
-    Patient.find({ surname: { $regex: new RegExp(`^${req.query.surname}$`), $options: 'i' } }).then(resultadoSurname => {
-        if (resultadoSurname) {
-            Record.find({ patient: resultadoSurname[0]._id }, 'medicalRecord appointments -_id').then(resultado => {
-                if (resultado.length > 0)
+    Patient.find({ surname: { $regex: req.query.surname/* new RegExp(`^${req.query.surname}$`) */, $options: 'i' } }).then(resultSurname => {
+        if (resultSurname) {
+            Record.find({ patient: resultSurname[0]._id }, 'medicalRecord appointments -_id').then(result => {
+                if (result.length > 0)
                     res.status(200)
-                        .send({ result: resultado });
+                        .send({ result: result });
                 else
                     res.status(404)
                         .send({
@@ -48,16 +48,19 @@ router.get('/find', auth.protegerRuta("admin", "physio"), (req, res) => {
 
 // POR ID DE PACIENTE
 router.get('/:id', auth.protegerRuta("admin", "physio", "patient"), (req, res) => {
-    Record.findOne({patient: req.params.id}).then(resultado => {
-        if (resultado)
-            if (req.user.rol === "patient" && req.user.id !== req.params.id)
+    let token = req.headers['authorization'];
+    let user = auth.validarToken(token.substring(7));
+
+    Record.findOne({patient: req.params.id}).then(result => {
+        if (result)
+            if (user.rol === "patient" && user.id !== req.params.id)
                 res.status(403)
                     .send({
                         error: "No tienes permiso para ver los datos de este paciente"
                     });
             else {
                 res.status(200)
-                    .send({ result: resultado });
+                    .send({ result: result });
             }
         else
             res.status(404)
@@ -77,9 +80,9 @@ router.post('/', auth.protegerRuta("admin", "physio"), (req, res) => {
         patient: req.body.patient,
         medicalRecord: req.body.medicalRecord
     });
-    newRecord.save().then(resultado => {
+    newRecord.save().then(result => {
         res.status(201)
-            .send({ result: resultado });
+            .send({ result: result });
     }).catch(error => {
         res.status(400)
             .send({
@@ -89,20 +92,19 @@ router.post('/', auth.protegerRuta("admin", "physio"), (req, res) => {
 });
 
 router.post('/:id/appointments', auth.protegerRuta("admin", "physio"), (req, res) => {
-    Record.findOne({patient: req.params.id}).then(resultado => {
-        console.log(resultado);
-        if (resultado) {
-            console.log(resultado.appointments);
-            resultado.appointments.push({
+    Record.findOne({ patient: req.params.id }).then(result => {
+        if (result) {
+            result.appointments.push({
                 date: req.body.date,
                 physio: req.body.physio,
                 diagnosis: req.body.diagnosis,
                 treatment: req.body.treatment,
                 observations: req.body.observations
             });
-            resultado.save().then(resultado => {
-                console.log(resultado);
-                res.status(201).send({ result: resultado });
+            console.log(result.appointments);
+            result.save().then(result => {
+                res.status(201).send({ 
+                    result: result });
             }).catch(error => {
                 res.status(500).send({
                     error: "Error interno del servidor"
@@ -122,10 +124,10 @@ router.post('/:id/appointments', auth.protegerRuta("admin", "physio"), (req, res
 
 router.delete('/:id', auth.protegerRuta("admin", "physio"), (req, res) => {
     Record.findByIdAndDelete(req.params.id)
-        .then(resultado => {
-            if (resultado) {
+        .then(result => {
+            if (result) {
                 res.status(200)
-                    .send({ result: resultado });
+                    .send({ result: result });
             }
             else {
                 res.status(404)

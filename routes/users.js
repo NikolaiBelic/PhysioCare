@@ -6,10 +6,10 @@ let User = require(__dirname + '/../models/user.js');
 let router = express.Router();
 
 router.get('/', (req, res) => {
-    User.find(req.params.id).then(resultado => {
-        if (resultado)
+    User.find(req.params.id).then(result => {
+        if (result)
             res.status(200)
-                .send({ result: resultado });
+                .send({ result: result });
         else
             res.status(404)
                 .send({
@@ -30,9 +30,9 @@ router.post('/', async (req, res) => {
         password: hashedPassword,
         rol: req.body.rol
     });
-    newUser.save().then(resultado => {
+    newUser.save().then(result => {
         res.status(201)
-            .send({ result: resultado });
+            .send({ result: result });
     }).catch(error => {
         res.status(400)
             .send({
@@ -43,10 +43,10 @@ router.post('/', async (req, res) => {
 
 router.delete('/:id', (req, res) => {
     User.findByIdAndDelete(req.params.id)
-        .then(resultado => {
-            if (resultado) {
+        .then(result => {
+            if (result) {
                 res.status(200)
-                    .send({ result: resultado });
+                    .send({ result: result });
             }
             else {
                 res.status(404)

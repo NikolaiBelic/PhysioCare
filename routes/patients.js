@@ -10,10 +10,10 @@ let User = require(__dirname + '/../models/user.js');
 let router = express.Router();
 
 router.get('/', auth.protegerRuta("admin", "physio"), (req, res) => {
-    Patient.find(req.params.id).then(resultado => {
-        if (resultado)
+    Patient.find(req.params.id).then(result => {
+        if (result)
             res.status(200)
-                .send({ result: resultado });
+                .send({ result: result });
         else
             res.status(404)
                 .send({
@@ -29,10 +29,10 @@ router.get('/', auth.protegerRuta("admin", "physio"), (req, res) => {
 
 router.get('/find', auth.protegerRuta("admin", "physio"), (req, res) => {
     if (req.query.surname === "") {
-        Patient.find(req.params.id).then(resultado => {
-            if (resultado)
+        Patient.find(req.params.id).then(result => {
+            if (result)
                 res.status(200)
-                    .send({ resultado: resultado });
+                    .send({ result: result });
             else
                 res.status(404)
                     .send({
@@ -45,10 +45,10 @@ router.get('/find', auth.protegerRuta("admin", "physio"), (req, res) => {
                 });
         });
     } else {
-        Patient.find({ surname: { $regex: new RegExp(`^${req.query.surname}$`), $options: 'i' } }).then(resultado => {
-            if (resultado.length > 0)
+        Patient.find({ surname: { $regex: req.query.surname /* new RegExp(`^${req.query.surname}$`) */, $options: 'i' } }).then(result => {
+            if (result.length > 0)
                 res.status(200)
-                    .send({ result: resultado });
+                    .send({ result: result });
             else
                 res.status(404)
                     .send({
@@ -65,25 +65,26 @@ router.get('/find', auth.protegerRuta("admin", "physio"), (req, res) => {
 
 
 router.get('/:id', auth.protegerRuta("admin", "physio", "patient"), (req, res) => {
-    Patient.findById(req.params.id).then(resultado => {
-        console.log(resultado.id);
-        console.log(req.user.password);
-        console.log(req.user);
-        if (resultado)
-            if (req.user.rol === "patient" && req.user.id !== req.params.id)
+    let token = req.headers['authorization'];
+    let user = auth.validarToken(token.substring(7));
+    
+    Patient.findById(req.params.id).then(result => {
+        if (result)
+            if (user.rol === "patient" && user.id !== req.params.id)
                 res.status(403)
                     .send({
                         error: "No tienes permiso para ver los datos de este paciente"
                     });
             else {
                 res.status(200)
-                    .send({ result: resultado });
+                    .send({ result: result });
             }
-        else
+        else {
             res.status(404)
                 .send({
                     error: "No se ha encontrado el paciente"
                 });
+        }
     }).catch(error => {
         res.status(500)
             .send({
@@ -145,7 +146,7 @@ router.post('/', auth.protegerRuta("admin", "physio"), async (req, res) => {
         });
 
         newPatient.save().then(patientResult => {
-            res.status(201).send({ ok: true, resultado: patientResult });
+            res.status(201).send({ ok: true, result: patientResult });
         }).catch(error => {
             console.error("Error guardando el paciente:", error);
             res.status(500).send({
@@ -185,9 +186,9 @@ router.post('/', auth.protegerRuta("admin", "physio"), async (req, res) => {
             address: req.body.address,
             insuranceNumber: req.body.insuranceNumber,
         });
-        newPatient.save().then(resultado => {
+        newPatient.save().then(result => {
             res.status(201)
-                .send({ ok: true, resultado: resultado });
+                .send({ ok: true, result: result });
         }).catch(error => {
             res.status(400)
                 .send({
@@ -213,10 +214,10 @@ router.put('/:id', auth.protegerRuta("admin", "physio"), (req, res) => {
             address: req.body.address,
             insuranceNumber: req.body.insuranceNumber
         }
-    }, { new: true, runValidators: true }).then(resultado => {
-        if (resultado) {
+    }, { new: true, runValidators: true }).then(result => {
+        if (result) {
             res.status(200)
-                .send({ result: resultado });
+                .send({ result: result });
         }
         else {
             res.status(400)
@@ -232,10 +233,10 @@ router.put('/:id', auth.protegerRuta("admin", "physio"), (req, res) => {
 
 router.delete('/:id', auth.protegerRuta("admin", "physio"), (req, res) => {
     Patient.findByIdAndDelete(req.params.id)
-        .then(resultado => {
-            if (resultado) {
+        .then(result => {
+            if (result) {
                 res.status(200)
-                    .send({ result: resultado });
+                    .send({ result: result });
             }
             else {
                 res.status(404)

@@ -20,6 +20,6 @@ app.use('/users', users);
 app.use('/auth', auth);
 app.listen(8080);
 
-// result en vez de resultado
+// result en vez de result
 // quitar todos los ok
 // mismo servicio post de paciente y fisio se crea el usuario y se le añade al paciente el id de ese usuario

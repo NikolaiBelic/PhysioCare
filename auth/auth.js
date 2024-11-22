@@ -6,8 +6,8 @@ let generarToken = (id, login, rol) => jwt.sign({ id: id, login: login, rol: rol
 
 let validarToken = token => {
     try {
-        let resultado = jwt.verify(token, secreto);
-        return resultado;
+        let result = jwt.verify(token, secreto);
+        return result;
     } catch (e) { }
 }
 
@@ -16,30 +16,16 @@ let protegerRuta = (...rol) => {
         let token = req.headers['authorization'];
         if (token) {
             token = token.substring(7);
-            let resultado = validarToken(token);
-            if (resultado && rol.includes(resultado.rol))
+            let result = validarToken(token);
+            if (result && rol.includes(result.rol))
                 next();
             else
-                res.send({ error: "Acceso no autorizado" });
+                res.status(403).send({ error: "Acceso no autorizado"});
         } else
-            res.send({ error: "Acceso no autorizado" });
+            res.status(403)
+                .send({ error: "Acceso no autorizado" });
     }
 };
-
-/* let protegerRuta =  => {
-    return (req, res, next) => {
-        let token = req.headers['authorization'];
-        if (token) {
-            token = token.substring(7);
-            let resultado = validarToken(token);
-            if (resultado && ( === "" || rol === resultado.rol))
-                next();
-            else
-                res.send({ ok: false, error: "Acceso no autorizado" });
-        } else
-            res.send({ ok: false, error: "Acceso no autorizado" });
-    }
-}; */
 
 module.exports = {
     generarToken: generarToken,

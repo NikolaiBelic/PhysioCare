@@ -25,39 +25,22 @@ router.get('/', auth.protegerRuta("admin", "physio", "patient"), (req, res) => {
 });
 
 router.get('/find', auth.protegerRuta("admin", "physio", "patient"), (req, res) => {
-    if (req.query.specialty === "") {
-        Physio.find(req.params.id).then(resultado => {
-            if (resultado)
-                res.status(200)
-                    .send({ result: resultado });
-            else
-                res.status(404)
-                    .send({
-                        error: "No hay fisios en el sistema"
-                    });
-        }).catch(error => {
-            res.status(500)
-                .send({
-                    error: "Error interno del servidor"
-                });
-        });
-    } else {
-        Physio.find({ specialty: { $regex: new RegExp(`^${req.query.specialty}$`), $options: 'i' } }).then(resultado => {
+        Physio.find({ 
+            specialty: { $regex: new RegExp(`^${req.query.specialty}$`), $options: 'i' } }).then(resultado => {
             if (resultado.length > 0)
                 res.status(200)
                     .send({ result: resultado });
-            else
-                res.status(404)
-                    .send({
+            else {
+                    res.status(404).send({
                         error: "No se han encontrado fisios con esos criterios"
                     });
+                }
         }).catch(error => {
             res.status(500)
                 .send({
                     error: "Error interno del servidor"
                 });
         });
-    }
 });
 
 router.get('/:id', auth.protegerRuta("admin", "physio", "patient"), (req, res) => {
