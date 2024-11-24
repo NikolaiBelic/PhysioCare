@@ -102,10 +102,12 @@ router.post('/:id/appointments', auth.protegerRuta("admin", "physio"), (req, res
                 observations: req.body.observations
             });
             console.log(result.appointments);
-            result.save().then(result => {
+            result.save().then(savedResult => {
                 res.status(201).send({ 
-                    result: result });
+                    result: savedResult 
+                });
             }).catch(error => {
+                console.error("Error al guardar el expediente:", error);
                 res.status(500).send({
                     error: "Error interno del servidor"
                 });
@@ -123,7 +125,7 @@ router.post('/:id/appointments', auth.protegerRuta("admin", "physio"), (req, res
 });
 
 router.delete('/:id', auth.protegerRuta("admin", "physio"), (req, res) => {
-    Record.findByIdAndDelete(req.params.id)
+    Record.findOneAndDelete({ patient: req.params.id })
         .then(result => {
             if (result) {
                 res.status(200)
